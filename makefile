@@ -7,14 +7,17 @@ all: main
 
 force: clean reset main
 
-main: main.o menu.o common.o
-	$(EXE) minesweeper main.o menu.o common.o
+main: main.o mainMenu.o common.o options.o
+	$(EXE) minesweeper main.o mainMenu.o common.o options.o
 
-main.o: main.cpp main.h menu.h common.h
+main.o: main.cpp main.h mainMenu.h common.h options.h
 	$(OBJ) main.cpp
 
-menu.o: menu.cpp menu.h common.h
-	$(OBJ) menu.cpp
+mainMenu.o: mainMenu.cpp menu.h common.h
+	$(OBJ) mainMenu.cpp
+
+options.o: options.cpp main.h menu.h
+	$(OBJ) options.cpp
 
 common.o: common.cpp
 	$(OBJ) common.cpp

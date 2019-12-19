@@ -1,6 +1,7 @@
 #include "main.h"
-#include "menu.h"
+#include "mainMenu.h"
 #include "common.h"
+#include "options.h"
 
 using namespace std;
 
@@ -13,10 +14,14 @@ int main()
   keypad(stdscr, TRUE);
   noecho();
 
+  OPTIONS gameOptions;
+
   while(STATE != quit)
   {
     if(STATE == gamemenu)
       mainMenu();
+    if(STATE == options)
+      getOptions(&gameOptions); 
   }
 
   endwin();

@@ -6,11 +6,11 @@
 
 using namespace std;
 
-enum state {gamemenu, load, options, game, quit};
+typedef enum state {gamemenu, leaderboard, options, game, quit} state;
 
-extern enum state STATE;
+extern state STATE;
 
-typedef struct GAME_OPTIONS
+typedef struct OPTIONS
 {
   unsigned height;
   unsigned width;
