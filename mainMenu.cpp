@@ -22,9 +22,9 @@ void mainMenu()
   while((input = getch()) != '\n')
   {
     bool error = true;
-    if(input == KEY_UP || input == 'k')
+    if(isUp(input))
       error = error && !mainMenu.prev();
-    if(input == KEY_DOWN || input == 'j')
+    if(isDown(input))
       error = error && !mainMenu.next();
     if(error)
       bell();

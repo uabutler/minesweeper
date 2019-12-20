@@ -41,9 +41,9 @@ void getOptions(OPTIONS* gameOptions)
   while((input = getch()) != '\n')
   {
     bool error = true;
-    if(input == KEY_UP)
+    if(isUp(input))
       error = error && !optionsMenu.prev();
-    if(input == KEY_DOWN)
+    if(isDown(input))
       error = error && !optionsMenu.next();
     if(error)
       bell();
@@ -55,9 +55,9 @@ void getOptions(OPTIONS* gameOptions)
   while((input = getch()) != '\n')
   {
     bool error = true;
-    if(input == KEY_RIGHT)
+    if(isRight(input))
       error = error && !returnMenu.next();
-    if(input == KEY_LEFT)
+    if(isLeft(input))
       error = error && !returnMenu.prev();
     if(error)
       bell();
