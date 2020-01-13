@@ -6,7 +6,7 @@
 
 inline bool isInBounds(const vector< vector<bool> >& a, size_t r, size_t c)
 {
-  return (r > 0 && r < a.size() && c > 0 && c < a[0].size());
+  return r < a.size() && c < a[0].size();
 }
 
 // Randomly places bombs on the board, while avoiding placing a bomb
@@ -59,9 +59,9 @@ unsigned computeSurroundHelper(const vector< vector<bool> >& board,
   size_t row, size_t col)
 {
   unsigned count = 0;
-  for(int i = (int)row - 1; i <= (int)row + 1; i++)
+  for(size_t i = row - 1; i <= row + 1; i++)
   {
-    for(int j = (int)col - 1; j <= (int)col + 1; j++)
+    for(size_t j = col - 1; j <= col + 1; j++)
     {
       if(isInBounds(board, i, j))
         if(board[i][j]) count++;

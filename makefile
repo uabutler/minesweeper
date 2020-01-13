@@ -1,14 +1,19 @@
 CC=g++
 FLAGS=-Wall --pedantic -std=c++11
 OBJ=$(CC) $(FLAGS) -c
-EXE=$(CC) $(FLAGS) -lncurses -o
+EXE=$(CC) $(FLAGS) -o
+
+# Use the first option for mac, the second for POSIX
+
+#LIB=-lcurses
+LIB=-lncurses -lpthread
 
 all: main
 
 force: clean reset main
 
 main: main.o mainMenu.o options.o common.o timer.o board.o boardPrinter.o game.o
-	$(EXE) minesweeper main.o mainMenu.o options.o common.o timer.o board.o boardPrinter.o game.o
+	$(EXE) minesweeper main.o mainMenu.o options.o common.o timer.o board.o boardPrinter.o game.o $(LIB)
 
 main.o: main.cpp main.h mainMenu.h common.h options.h game.h
 	$(OBJ) main.cpp

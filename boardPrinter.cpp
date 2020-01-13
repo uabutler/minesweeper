@@ -13,7 +13,7 @@
 
 inline bool BoardPrinter::isInBounds(size_t r, size_t c)
 {
-  return r > 0 && r < board.getHeight() && c > 0 && c < board.getWidth();
+  return r < board.getHeight() && c < board.getWidth();
 }
 
 BoardPrinter::BoardPrinter(MinesweeperBoard& b): board(b)
@@ -52,6 +52,18 @@ char BoardPrinter::getCenter(size_t r, size_t c)
 
 void BoardPrinter::printHelper()
 {
+  // Print intersections
+  for(size_t r = 0; r < (board.getHeight() - 1); r++)
+  {
+    for(size_t c = 0; c < (board.getWidth() - 1); c++)
+    {
+      if(!board.isRevealed(r, c) || !board.isRevealed(r + 1, c) || !board.isRevealed(r, c + 1) || !board.isRevealed(r + 1, c + 1))
+        mvprintw((2 * r) + 2 + row, (4 * c) + 4 + col, INTER);
+      else
+        mvprintw((2 * r) + 2 + row, (4 * c) + 4 + col, EINTER);
+    }
+  }
+
   // Print middles
   for(size_t r = 0; r < board.getHeight(); r++)
   {
@@ -82,24 +94,11 @@ void BoardPrinter::printHelper()
         mvprintw((2 * r) + 2 + row, (4 * c) + 1 + col, ETOP);
     }
   }
-
-  // Print intersections
-  for(size_t r = 0; r < (board.getHeight() - 1); r++)
-  {
-    for(size_t c = 0; c < (board.getWidth() - 1); c++)
-    {
-      if(!board.isRevealed(r, c) || !board.isRevealed(r + 1, c) ||
-        !board.isRevealed(r, c + 1) || !board.isRevealed(r + 1, c + 1))
-        mvprintw((2 * r) + 2 + row, (4 * col) + 4 + col, INTER);
-      else
-        mvprintw((2 * r) + 2 + row, (4 * col) + 4 + col, INTER);
-    }
-  }
 }
 
 void BoardPrinter::print(int r, int c)
 {
-  int i;
+  size_t i;
   row = r;
   col = c;
 
