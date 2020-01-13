@@ -9,7 +9,8 @@
 #define IA A_NORMAL 
 #define SA A_STANDOUT
 
-#define VS 2
+// The spacing between two horizontal menu options
+#define HS 2
 
 #include <vector>
 #include <string>
@@ -139,7 +140,7 @@ void Menu<T>::addItem(string name, T value)
   else
   {
     height = hasHeader ? 2 : 1;
-    width += name.length() + VS;
+    width += name.length() + HS;
   }
 }
 
@@ -176,35 +177,42 @@ void Menu<T>::print(int r, int c)
   row = r;
   col = c;
 
+  // The row currently used for printing
   size_t curRow = row;
 
+  // Print header
   if(hasHeader)
   {
     attrset(headerAttr);
     mvprintw(curRow++, col, "%s", header.c_str());
   }
   
+  // The first item is selected initially
   attrset(selectedAttr);
 
+  // This is used to move the cursor back after printing
   int mvrow = curRow;
   if(vertical)
   {
     paddedPrint(curRow++, col, items[0].first, width);
     
+    // Print items that aren't selected
     attrset(itemAttr);
     for(size_t curItem = 1; curItem < items.size(); curItem++)
       paddedPrint(curRow++, col, items[curItem].first, width);
   }
   else // if(horizontal)
   {
+    // The column currently used for printing
     size_t curCol = col;
 
     mvprintw(curRow, curCol, "%s", items[0].first.c_str());
 
+    // Print items that aren't selected
     attrset(itemAttr);
     for(size_t curItem = 1; curItem < items.size(); curItem++)
     {
-      curCol += items[curItem - 1].first.length() + VS;
+      curCol += items[curItem - 1].first.length() + HS;
       mvprintw(curRow, curCol, "%s", items[curItem].first.c_str());
     }
   }
@@ -228,28 +236,37 @@ size_t Menu<T>::getLoc()
 // Otherwise, the selection stays the same and we return false.
 
 // This function specifically assumes the change can be made
+// dif is the difference between the current value and the value
+// that should be selected
 template <typename T>
 void Menu<T>::changeSelectionHelper(int dif)
 {
+  // Two different cases for computing the row and col vals
   if(vertical)
   {
+    // First, the currently selected item is unselected
     attrset(itemAttr);
     paddedPrint(row + current + ((hasHeader ? 1 : 0)),
       col, items[current].first, width);
 
+    // We change what value is current
     current += dif;
 
+    // And select the new value
     attrset(selectedAttr);
     paddedPrint(row + current + ((hasHeader ? 1 : 0)),
       col, items[current].first, width);
 
+    // Then the cursor is moved to the first character of the newly selected value
     move(row + current + (hasHeader ? 1 : 0), col);
   }
   else // if(horizontal)
   {
+    // The procedure is the same for horizontal menu
+    // The distance of the menu item from the starting col
     int offset = 0;
     for(int i = 0; i < (int)current; i++)
-      offset += items[i].first.length() + VS;
+      offset += items[i].first.length() + HS;
 
     attrset(itemAttr);
     mvprintw(row + (hasHeader ? 1 : 0), col + offset,
@@ -259,15 +276,16 @@ void Menu<T>::changeSelectionHelper(int dif)
     int inc = (dif > 0) ? 1 : -1;
     inc *= dif ? 1 : 0;
 
+    // computing the new offset is different for each direction
     if(inc == 1)
     { 
       for(int i = current; i < (int)current + dif; i += inc)
-        offset += items[i].first.length() + VS;
+        offset += items[i].first.length() + HS;
     }
     else if(inc == -1)
     {
       for(int i = (int)current - 1; i >= (int)current + dif; i += inc)
-        offset -= items[i].first.length() + VS;
+        offset -= items[i].first.length() + HS;
     }
 
     attrset(selectedAttr);
@@ -281,6 +299,8 @@ void Menu<T>::changeSelectionHelper(int dif)
   attrset(A_NORMAL);
 }
 
+// These two functions move the selection cursor if possible,
+// and returns whether or not it was successful
 template <typename T>
 bool Menu<T>::prev()
 {
@@ -312,6 +332,7 @@ void Menu<T>::isSelected(bool flag)
 {
   attrset(flag ? selectedAttr : itemAttr);
   
+  // Reprint the currently selected item with given attribute
   if(vertical)
   {
     paddedPrint(row + current + (hasHeader ? 1 : 0),

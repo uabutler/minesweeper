@@ -20,7 +20,9 @@ void Timer::printHelper()
 
 void Timer::ThreadMain()
 {
+  // Start time stays the same
   auto startTime = chrono::steady_clock::now();
+  // These will store the duration
   auto prevTime = chrono::steady_clock::now() - startTime;
   auto currentTime = prevTime;
 
@@ -30,8 +32,10 @@ void Timer::ThreadMain()
 
     if(currentTime != prevTime)
     {
+      // casts duration to seconds
       auto sec = chrono::duration_cast<chrono::seconds>(currentTime);
 
+      // update the time and print the values
       time.hours = sec.count() / 3600;
       time.minutes = (sec.count() / 60) % 60;
       time.seconds = sec.count() % 60;

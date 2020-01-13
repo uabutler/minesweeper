@@ -2,12 +2,13 @@
 #include "mainMenu.h"
 #include "common.h"
 #include "options.h"
+#include "game.h"
 
 using namespace std;
 
 enum state STATE = gamemenu;
 
-int main()
+int main(int argc, char** argv)
 {
   initscr();
   cbreak();
@@ -22,6 +23,8 @@ int main()
       mainMenu();
     if(STATE == options)
       getOptions(&gameOptions); 
+    if(STATE == game)
+      playGame(gameOptions);
   }
 
   endwin();

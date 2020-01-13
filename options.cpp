@@ -4,22 +4,26 @@
 
 void getOptions(OPTIONS* gameOptions)
 {
+  // Default options
   OPTIONS easy = {9, 9, 10};
   OPTIONS medium = {16, 16, 40};
   OPTIONS hard = {16, 40, 99};
 
+  // Create the options menu
   Menu<OPTIONS> optionsMenu("Difficulty");
 
   optionsMenu.addItem("Easy", easy);
   optionsMenu.addItem("Medium", medium);
   optionsMenu.addItem("Hard", hard);
 
-
+  // Create the return menu
+  // presents options to save the settings or cancel
   Menu<state> returnMenu(false);
 
   returnMenu.addItem("Save", game);
   returnMenu.addItem("Cancel", gamemenu);
 
+  // print both of the menus
   int maxrow, maxcol;
   getmaxyx(stdscr, maxrow, maxcol);
 
@@ -36,6 +40,7 @@ void getOptions(OPTIONS* gameOptions)
 
   optionsMenu.print(startOptRow, startCol);
 
+  // Get user input for the difficulty menu
   int input;
 
   while((input = getch()) != '\n')
@@ -52,6 +57,7 @@ void getOptions(OPTIONS* gameOptions)
   *gameOptions = optionsMenu.getCurrent();
   returnMenu.isSelected(true);
 
+  // Ask the user is they way to save or cancel
   while((input = getch()) != '\n')
   {
     bool error = true;

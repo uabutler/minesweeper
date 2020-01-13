@@ -4,12 +4,15 @@
 
 void mainMenu()
 {
+  // Create the menu
   Menu<state> mainMenu("Main Menu");
 
+  // Each item sets the program to a different state if selected
   mainMenu.addItem("New Game", options);
   mainMenu.addItem("Leaderboard", leaderboard);
   mainMenu.addItem("Quit", quit);
 
+  // Print the menu
   int maxrow, maxcol;
   getmaxyx(stdscr, maxrow, maxcol);
 
@@ -18,6 +21,7 @@ void mainMenu()
 
   mainMenu.print(row, col);
 
+  // The user can then select an option
   int input;
   while((input = getch()) != '\n')
   {
