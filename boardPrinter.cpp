@@ -42,10 +42,10 @@ char BoardPrinter::getCenter(size_t r, size_t c)
 {
   if(!board.getInit() || !board.isRevealed(r, c))
     return '.';
-  if(board.getNum(r, c) == 0)
-    return ' ';
   if(board.checkSquare(r, c))
     return 'X';
+  if(board.getNum(r, c) == 0)
+    return ' ';
   
   return board.getNum(r, c) + '0';
 }

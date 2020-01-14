@@ -43,13 +43,14 @@ void playGame(OPTIONS gameOptions)
 
   // Wait to initialize board
   int input;
-  while((input = getch()) == '\n')
+  while((input = getch()) != '\n')
   {
     if(!moveGameCursor(input, printer, board, curRow, curCol))
       bell();
   }
 
   board.init(curRow, curCol);
+  board.reveal(curRow, curCol);
   printer.update(curRow, curCol);
 
   // Flag to determine if the game is still going
@@ -62,7 +63,7 @@ void playGame(OPTIONS gameOptions)
         bell();
     }
 
-    board.dumbReveal(curRow, curCol);
+    board.reveal(curRow, curCol);
     printer.update(curRow, curCol);
   }
 }

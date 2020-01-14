@@ -11,11 +11,10 @@ inline bool isInBounds(const vector< vector<bool> >& a, size_t r, size_t c)
 
 // Randomly places bombs on the board, while avoiding placing a bomb
 // at the players first choice (given by r, c)
-void placeBombs(vector< vector<bool> >& board,
-  size_t bombs, size_t r, size_t c)
+void MinesweeperBoard::placeBombs(size_t r, size_t c)
 {
   // Placeholder
-  board[r][c] = true;
+  bombLocations[r][c] = true;
 
   default_random_engine
     rng(std::chrono::system_clock::now().time_since_epoch().count());
@@ -25,7 +24,7 @@ void placeBombs(vector< vector<bool> >& board,
     // A uniform chance of being placed at any of the remaining
     // spots
     uniform_int_distribution<size_t>
-      rand(0, (board.size()*board[0].size()) - (i + 1));
+      rand(0, (bombLocations.size()*bombLocations[0].size()) - (i + 1));
 
     // Count how many empty slots we should pass before we place
     // the bomb
@@ -36,49 +35,47 @@ void placeBombs(vector< vector<bool> >& board,
 
     while(count)
     {
-      row = index % board.size();
-      col = index / board.size();
+      row = index % bombLocations.size();
+      col = index / bombLocations.size();
 
-      if(!board[row][col])
+      if(!bombLocations[row][col])
         count--;
 
       index++;
     }
 
     // Place the bomb
-    board[row][col] = true;
+    bombLocations[row][col] = true;
   }
 
   // Remove placeholder
-  board[r][c] = false;
+  bombLocations[r][c] = false;
 }
 
 // Computes the number of bombs surrounding a single place while
-// avoidinh going out of bounds
-unsigned computeSurroundHelper(const vector< vector<bool> >& board,
-  size_t row, size_t col)
+// avoiding going out of bounds
+inline unsigned MinesweeperBoard::computeSurroundHelper(size_t r, size_t c)
 {
   unsigned count = 0;
-  for(size_t i = row - 1; i <= row + 1; i++)
+  for(size_t i = r - 1; i <= r + 1; i++)
   {
-    for(size_t j = col - 1; j <= col + 1; j++)
+    for(size_t j = c - 1; j <= c + 1; j++)
     {
-      if(isInBounds(board, i, j))
-        if(board[i][j]) count++;
+      if(isInBounds(bombLocations, i, j))
+        if(bombLocations[i][j]) count++;
     }
   }
 
-  return count - (board[row][col] ? 1 : 0);
+  return count - (bombLocations[r][c] ? 1 : 0);
 }
 
-// Computes the number of bombs surrounging each square
-void computeSurround(const vector< vector<bool> >& board,
-  vector< vector<unsigned> >& surround)
+// Computes the number of bombs surrounding each square
+void MinesweeperBoard::computeSurround()
 {
   for(size_t i = 0; i < surround.size(); i++)
   {
     for(size_t j = 0; j < surround[0].size(); j++)
-      surround[i][j] = computeSurroundHelper(board, i, j);
+      surround[i][j] = computeSurroundHelper(i, j);
   }
 }
 
@@ -105,8 +102,8 @@ size_t MinesweeperBoard::getWidth()
 // Initialized the board after the first move, given by r, c
 void MinesweeperBoard::init(size_t r, size_t c)
 {
-  placeBombs(bombLocations, bombs, r, c);
-  computeSurround(bombLocations, surround);
+  placeBombs(r, c);
+  computeSurround();
 
   isInit = true;
 }
@@ -135,52 +132,18 @@ bool MinesweeperBoard::checkSquare(size_t r, size_t c)
   return bombLocations[r][c];
 }
 
-// Reveals a square and returns a list of all the squares that were
-// updated
-vector< pair<size_t, size_t> >
-  MinesweeperBoard::reveal(size_t r, size_t c)
-{
-  vector< pair<size_t, size_t> > out;
-
-  if(!revealed[r][c])
-  {
-    out.emplace_back(r, c);
-    revealed[r][c] = true;
-  }
-  
-  if(surround[r][c] == 0)
-  {
-    for(int i = (int)r - 1; i <= (int)r + 1; i++)
-    {
-      for(int j = (int)c - 1; j <= (int)c + 1; j++)
-      {
-        if(isInBounds(revealed, i, j) && !revealed[i][j])
-        {
-          auto tmp = reveal(i, j);
-          out.insert(out.end(), tmp.begin(), tmp.end());
-        }
-      }
-    }
-  }
-
-  return out;
-}
-
 // This method reveals a sqaure, but doesn't have the overhead of
 // creating and returning the list
-void MinesweeperBoard::dumbReveal(size_t r, size_t c)
+void MinesweeperBoard::reveal(size_t r, size_t c)
 {
   revealed[r][c] = true;
-  
-  if(surround[r][c] == 0)
+
+  for(int i = (int)r - 1; i <= (int)r + 1; i++)
   {
-    for(int i = (int)r - 1; i <= (int)r + 1; i++)
+    for(int j = (int)c - 1; j <= (int)c + 1; j++)
     {
-      for(int j = (int)c - 1; j <= (int)c + 1; j++)
-      {
-        if(isInBounds(revealed, i, j) && !revealed[i][j])
-          reveal(i, j);
-      }
+      if(isInBounds(revealed, i, j) && surround[i][j] == 0 && !revealed[i][j])
+        reveal(i, j);
     }
   }
 }
