@@ -1,5 +1,5 @@
 CC=g++
-FLAGS=-Wall --pedantic -std=c++11
+FLAGS=-Wall --pedantic -std=c++11 -O3
 OBJ=$(CC) $(FLAGS) -c
 EXE=$(CC) $(FLAGS) -o
 

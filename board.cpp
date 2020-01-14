@@ -2,6 +2,8 @@
 #include <random>
 #include <chrono>
 
+#include <iostream>
+
 #include "board.h"
 
 inline bool isInBounds(const vector< vector<bool> >& a, size_t r, size_t c)
@@ -56,10 +58,13 @@ void MinesweeperBoard::placeBombs(size_t r, size_t c)
 // avoiding going out of bounds
 inline unsigned MinesweeperBoard::computeSurroundHelper(size_t r, size_t c)
 {
+  if(bombLocations[r][c]) return 9;
+
   unsigned count = 0;
-  for(size_t i = r - 1; i <= r + 1; i++)
+
+  for(size_t i = (r ? (r - 1) : 0); i <= r + 1; i++)
   {
-    for(size_t j = c - 1; j <= c + 1; j++)
+    for(size_t j = (c ? (c - 1) : 0); j <= c + 1; j++)
     {
       if(isInBounds(bombLocations, i, j))
         if(bombLocations[i][j]) count++;
@@ -138,12 +143,15 @@ void MinesweeperBoard::reveal(size_t r, size_t c)
 {
   revealed[r][c] = true;
 
-  for(int i = (int)r - 1; i <= (int)r + 1; i++)
+  if(surround[r][c] == 0)
   {
-    for(int j = (int)c - 1; j <= (int)c + 1; j++)
+    for(int i = (int)r - 1; i <= (int)r + 1; i++)
     {
-      if(isInBounds(revealed, i, j) && surround[i][j] == 0 && !revealed[i][j])
-        reveal(i, j);
+      for(int j = (int)c - 1; j <= (int)c + 1; j++)
+      {
+        if(isInBounds(revealed, i, j) && !revealed[i][j])
+          reveal(i, j);
+      }
     }
   }
 }
