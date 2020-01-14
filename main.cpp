@@ -20,11 +20,20 @@ int main(int argc, char** argv)
   while(STATE != quit)
   {
     if(STATE == gamemenu)
+    {
+      curs_set(0);
       mainMenu();
+    }
     if(STATE == options)
-      getOptions(&gameOptions); 
+    {
+      curs_set(0);
+      getOptions(&gameOptions);
+    }
     if(STATE == game)
+    {
+      curs_set(1);
       playGame(gameOptions);
+    }
   }
 
   endwin();
