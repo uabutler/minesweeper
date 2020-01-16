@@ -40,6 +40,8 @@ void BoardPrinter::getHeightWidth(int& h, int& w)
 
 char BoardPrinter::getCenter(size_t r, size_t c)
 {
+  if(board.getFlag(r, c))
+    return '>';
   if(!board.getInit() || !board.isRevealed(r, c))
     return '.';
   if(board.checkSquare(r, c))

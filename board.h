@@ -8,9 +8,10 @@ using namespace std;
 class MinesweeperBoard
 {
 private:
-  vector< vector<bool> > bombLocations;
-  vector< vector<bool> > revealed;
-  vector< vector<unsigned> > surround;
+  vector<vector<bool>> bombLocations;
+  vector<vector<bool>> revealed;
+  vector<vector<unsigned>> surround;
+  vector<vector<bool>> flagged;
 
   size_t height;
   size_t width;
@@ -36,6 +37,10 @@ public:
   bool checkSquare(size_t r, size_t c);
   void reveal(size_t r, size_t c);
   bool checkWin();
+  void putFlag(size_t r, size_t c);
+  void rmFlag(size_t r, size_t c);
+  void toggleFlag(size_t r, size_t c);
+  bool getFlag(size_t r, size_t c);
 };
 
 #endif // BOARD_H

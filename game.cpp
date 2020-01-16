@@ -54,18 +54,34 @@ void playGame(OPTIONS gameOptions)
   printer.update(curRow, curCol);
 
   // Flag to determine if the game is still going
-  bool flag = true;
-  while(flag)
+  bool flag = false;
+  while(!flag)
   {
     while((input = getch()) != '\n')
     {
       if(!moveGameCursor(input, printer, board, curRow, curCol))
         bell();
+      if(input == 'f' || input == 'F')
+      {
+        board.toggleFlag(curRow, curCol);
+        printer.update(curRow, curCol);
+      }
     }
 
-    board.reveal(curRow, curCol);
-    printer.update(curRow, curCol);
+    if(!board.getFlag(curRow, curCol))
+    {
+      board.reveal(curRow, curCol);
+      printer.update(curRow, curCol);
+    }
+    else
+    {
+      bell();
+    }
+
+    flag = board.checkWin();
   }
+
+  STATE = gamemenu;
 }
 
 bool isMovement(int input)

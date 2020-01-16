@@ -32,7 +32,7 @@ void MinesweeperBoard::placeBombs(size_t r, size_t c)
     // the bomb
     size_t count = rand(rng);
     
-    size_t row, col;
+    size_t row = 0, col = 0;
     size_t index = 0;
 
     while(count)
@@ -90,6 +90,7 @@ height(h), width(w), bombs(b), isInit(false)
 {
   bombLocations = vector< vector<bool> >(h, vector<bool>(w, false));
   revealed = vector< vector<bool> >(h, vector<bool>(w, false));
+  flagged = vector< vector<bool> >(h, vector<bool>(w, false));
   surround = vector< vector<unsigned> >(h, vector<unsigned>(w, 0));
 }
 
@@ -169,4 +170,24 @@ bool MinesweeperBoard::checkWin()
   }
   
   return true;
+}
+
+void MinesweeperBoard::putFlag(size_t r, size_t c)
+{
+  flagged[r][c] = true;
+}
+
+void MinesweeperBoard::rmFlag(size_t r, size_t c)
+{
+  flagged[r][c] = false;
+}
+
+void MinesweeperBoard::toggleFlag(size_t r, size_t c)
+{
+  flagged[r][c] = flagged[r][c] != true;
+}
+
+bool MinesweeperBoard::getFlag(size_t r, size_t c)
+{
+  return flagged[r][c];
 }
