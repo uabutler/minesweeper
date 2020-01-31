@@ -1,4 +1,4 @@
-CC=g++
+CC=clang++
 FLAGS=-Wall --pedantic -std=c++11 -O3
 OBJ=$(CC) $(FLAGS) -c
 EXE=$(CC) $(FLAGS) -o
